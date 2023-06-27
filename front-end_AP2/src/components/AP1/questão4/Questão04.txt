@@ -1,0 +1,49 @@
+O Props Drilling ocorre quando precisamos passar props por vários níveis de componentes, mesmo que esses props
+sejam necessários apenas em um componente específico.
+
+O Contexto é uma funcionalidade do React que permite criar um "canal de comunicação" entre componentes, sem
+a necessidade de passar as props explicitamente por todos os níveis intermediários. O Contexto consiste em um 
+provedor (Provider) que disponibiliza os valores e um ou mais consumidores (Consumer) que acessam esses valores.
+
+Exemplo: existe uma estrutura de componentes com três níveis: A, B e C. O componente A precisa passar um "valor"
+para o componente C, mas o componente B está no meio e não precisa dele. Usando Contexto, pode-se resolver esse
+problema da seguinte maneira:
+
+Primeiro se cria um Contexto utilizando a função createContext do React:
+const MeuContexto = React.createContext();
+
+No componente A, se envolve o componente B e o componente C com o Provider do Contexto, passando o valor desejado:
+<MeuContexto.Provider value={valor}>
+  <B />
+  <C />
+</MeuContexto.Provider>
+
+No componente B, não precisa fazer nada em relação ao Contexto:
+function B() {
+  return (
+    <div>
+      {/* outros elementos e lógica aqui */}
+    </div>
+  );
+}
+
+No componente C, se o utiliza o hook useContext para acessar o valor do Contexto:
+import React, { useContext } from 'react';
+
+function C() {
+  const valor = useContext(MeuContexto);
+
+  return (
+    <div>
+      {/* utilização do valor */}
+    </div>
+  );
+}
+
+
+Ao utilizar o hook useContext, o componente C pode acessar diretamente o valor fornecido pelo componente A, sem a
+necessidade de passar explicitamente pelo componente B.
+
+O uso de Contextos resolve o problema de Props Drilling, permitindo que componentes acessem valores compartilhados
+sem a necessidade de passar valores manualmente pelos componentes intermediários. Isso torna o código mais limpo,
+modular e de fácil manutenção, evitando a propagação desnecessária de props por toda a árvore de componentes.
