@@ -93,6 +93,14 @@ const MyMenu = () => {
                     >
                         <Typography>Listar</Typography>
                     </MenuItem>
+
+                    <MenuItem
+                        onClick={handleCloseAlunoMenu}
+                        component={Link}
+                        to="listarAlunosAprovados"
+                    >
+                        <Typography>Listar Aprovados</Typography>
+                    </MenuItem>
                 </Menu>
             </Box>
         )

@@ -31,11 +31,15 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 
-const Listar = () => {
+const ListarAprovados = () => {
 
     const [alunos, setAlunos] = useState([])
     const navigate = useNavigate()
 
+
+    //Apesar da dica dada na folha da prova, resolvi fazer diferente
+
+    //Aqui no useEffect eu puxei todos os alunos do express -- CONTINUAÇÃO ABAIXO
     useEffect(
         () => {
             axios.get("http://localhost:3001/aluno/listar")
@@ -65,8 +69,7 @@ const Listar = () => {
         }
     }
 
-    //Aqui eu criei uma função para calcular a média do IRA de todos os alunos
-    //Essa função pega todos os IRAs do vetor de alunos, soma, depois divide pela quantidade de alunos
+    //Aqui eu criei uma função que calcula a média do IRA de todos os alunos -- CONTINUAÇÃO ABAIXO
     function getMediaIRA() {
         let soma = 0
         for (let i = 0; i < alunos.length; i++) {
@@ -77,42 +80,10 @@ const Listar = () => {
         return media.toFixed(2)
     }
 
-    //Aqui eu criei uma função para analisar o IRA de cada aluno e comparar com a média
-    //Para pegar aluno por aluno, eu usei o método find() para encontrar o aluno com o ID igual ao ID do parâmetro
-    //Depois, eu criei uma variável estilo que vai analisar se o IRA do aluno é menor que a média, se for, a cor da letra vai ser vermelha
-    function analisarIRA(id) {
-        let media = getMediaIRA()
-        let aluno = alunos.find(aluno => aluno._id == id)
-        let estilo = aluno.ira < media ? { color: 'red' } : {}
-
-        //Aqui eu retorno uma linha da tabela com os dados do aluno para colocar no map mais a frente
-        return (
-            <StyledTableRow key={aluno._id}>
-                <StyledTableCell>{aluno._id}</StyledTableCell>
-                {/* E aqui eu coloca a variável estilo dentro do sx da célula onde tem o nome do aluno */}
-                <StyledTableCell sx={estilo}>{aluno.nome}</StyledTableCell>
-                <StyledTableCell>{aluno.curso}</StyledTableCell>
-                <StyledTableCell>{aluno.ira}</StyledTableCell>
-                <StyledTableCell>
-                    <Box>
-                        <IconButton aria-label="edit" color="primary" component={Link} to={`/editarAluno/${aluno._id}`}>
-                            <EditIcon />
-                        </IconButton>
-
-                        <IconButton aria-label="delete" color="error" onClick={() => deleteAlunoById(aluno._id)}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Box>
-                </StyledTableCell>
-            </StyledTableRow>
-        )
-    }
-
-
     return (
         <div>
             <Typography variant="h4" fontWeight="bold" sx={{ mt: 4, mb: 4, color: "#0288d1" }}>
-                Listar Alunos
+                Listar Alunos Aprovados
             </Typography>
 
             <TableContainer component={Paper} sx={{ mt: 2 }}>
@@ -129,10 +100,31 @@ const Listar = () => {
 
                     <TableBody>
                         {
-                            //Aqui dentro do map eu chamei a função analisarIRA() para cada aluno do vetor de alunos
-                            alunos.map(
+                            /*E por fim, aqui eu filtrei os alunos que tem IRA maior que a média de todos os alunos 
+                            e adicionei na tabela através do map*/
+                            
+                            alunos.filter(aluno => aluno.ira > getMediaIRA())
+                            .map(
                                 (aluno) => {
-                                    return analisarIRA(aluno._id)
+                                    return (
+                                        <StyledTableRow key={aluno._id}>
+                                            <StyledTableCell>{aluno._id}</StyledTableCell>
+                                            <StyledTableCell>{aluno.nome}</StyledTableCell>
+                                            <StyledTableCell>{aluno.curso}</StyledTableCell>
+                                            <StyledTableCell>{aluno.ira}</StyledTableCell>
+                                            <StyledTableCell>
+                                                <Box>
+                                                    <IconButton aria-label="edit" color="primary" component={Link} to={`/editarAluno/${aluno._id}`}>
+                                                        <EditIcon />
+                                                    </IconButton>
+
+                                                    <IconButton aria-label="delete" color="error" onClick={() => deleteAlunoById(aluno._id)}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </Box>
+                                            </StyledTableCell>
+                                        </StyledTableRow>
+                                    )
                                 }
                             )
                         }
@@ -140,7 +132,6 @@ const Listar = () => {
                 </Table>
             </TableContainer>
 
-            {/* E por fim, adicionei uma nova tabela com a média de todos os alunos usando a função getMediaIRA() */}
             <TableContainer component={Paper} sx={{ mt: 2 }}>
                 <Table>
                     <TableBody>
@@ -159,4 +150,4 @@ const Listar = () => {
 }
 
 
-export default Listar
+export default ListarAprovados

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 const Cadastrar = () => {
 
     const [nome, setNome] = useState("")
-    const [curso, setCurso] = useState("")
+    const [curso, setCurso] = useState("") //Aqui eu setei o curso como string vazia para que seja perceptível para o usuário que ele deve escolher uma opção
     const [ira, setIra] = useState(0)
 
     const navigate = useNavigate()
@@ -47,14 +47,16 @@ const Cadastrar = () => {
                     onChange={(event) => setNome(event.target.value)}
                 />
 
+                {/* Aqui eu segui a mesma estrutura do titulação de professor */}
                 <FormControl fullWidth sx={{ my: 2 }}>
                     <InputLabel id="select-tit-label"> Curso </InputLabel>
                     <Select
                         labelId="select-tit-label"
                         label="Curso"
                         value={curso}
-                        onChange={(event) => setCurso(event.target.value)}
+                        onChange={(event) => setCurso(event.target.value)} //Quando o usuário seleciona uma opção, o estado curso é atualizado com o valor selecionado através da setCurso
                     >
+                        {/* Coloquei as siglas de cada curso como valor dos menuItens, como foi pedido na questão */}
                         <MenuItem value="DD">Design Digital</MenuItem>
                         <MenuItem value="ES">Engenharia de Software</MenuItem>
                         <MenuItem value="RD">Redes de Computadores</MenuItem>

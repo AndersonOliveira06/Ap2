@@ -7,6 +7,7 @@ require('./db/mongo.connection')
 
 var professores = require("./routes/professores")
 var alunos = require("./routes/alunos")
+var login = require("./routes/login")
 
 var app = express();
 
@@ -24,5 +25,6 @@ app.use(function (req, res, next) {
 
 app.use('/professor/', professores);
 app.use('/aluno/', alunos);
+app.use('/login/', login);
 
 module.exports = app;
